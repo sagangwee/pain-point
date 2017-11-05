@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
+    <h1>{{ topFiveTweets }}</h1>
+    <button v-on:click="getTopFiveTweets">Essential Links</button>
     <ul>
       <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
       <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
@@ -21,14 +21,29 @@
 </template>
 
 <script>
-export default {
-  name: 'HelloWorld',
-  data() {
-    return {
-      msg: 'Welcome to Your Vue.js App',
-    };
-  },
-};
+  import axios from 'axios';
+
+  export default {
+    name: 'HelloWorld',
+    data() {
+      return {
+        msg: 'Welcome to Your Vue.js App',
+        topFiveTweets: [],
+      };
+    },
+    methods: {
+      getTopFiveTweets() {
+        axios.get('http://127.0.0.1:8080/api/twitter')
+        .then((response) => {
+          // JSON responses are automatically parsed.
+          this.topFiveTweets = response.data;
+        })
+        .catch((e) => {
+          this.errors.push(e);
+        });
+      },
+    },
+  };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
