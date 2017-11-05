@@ -1,4 +1,4 @@
-# pain-point
+# Pain Point
 
 ## Build Setup
 
@@ -24,8 +24,6 @@ npm test
 
 ## Development
 
-# Start app
-
 ```bash
 
 # Start the server in one terminal
@@ -42,8 +40,8 @@ Alternatively, install Nodemon `sudo npm install -g nodemon` and run `nodemon se
 
 This app uses:
 - [Vue](https://vuejs.org) as a front-end framework.
-- [Express](https://github.com/expressjs/express) with [twit](https://github.com/ttezel/twit) for the server.
-- [Twitter API](https://dev.twitter.com/streaming/overview) for tweet data.
+- [Express](https://github.com/expressjs/express) for the server.
+- [Twitter API](https://dev.twitter.com/streaming/overview) and [twit](https://github.com/ttezel/twit) for tweet data.
 - [Stellar](https://html5up.net/stellar) by HTML5 UP as an html template.
 - [Element](http://element-cn.eleme.io/#/en-US) for styling.
 - [Material icons](https://github.com/google/material-design-icons/) and [Icons8 Flat Color Icons](https://github.com/icons8/flat-color-icons) and [Pixabay](https://pixabay.com/p-1294131/?no_redirect) for icons.
