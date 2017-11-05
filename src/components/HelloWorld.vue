@@ -6,6 +6,7 @@
         <header id="header" class="alt">
           <span class="logo"><img src="~@/assets/images/needle.svg" alt="" /></span>
           <h1>Pain Point</h1>
+          <p>Discover problems and solve them</p>
           <li v-for="tweet in topFiveTweets">
             {{ tweet.text }}
           </li>

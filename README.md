@@ -1,6 +1,6 @@
 # pain-point
 
-> A Vue.js project
+> Vue.js + Express
 
 ## Build Setup
 
@@ -24,4 +24,20 @@ npm run unit
 npm test
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Development
+
+# Start app
+
+```bash
+
+# Start the server in one terminal
+node server.js
+
+# Hot reload front end in another terminal
+npm run dev
+
+```
+
+App will be hosted at [localhost:8080](http://127.0.0.1:8080/)
+
+Alternatively, install Nodemon `sudo npm install -g nodemon` and run `nodemon server.js` to automatically restart the server on change.
