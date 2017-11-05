@@ -4,8 +4,8 @@
 
       <!-- Header -->
         <header id="header" class="alt">
-          <span class="logo"><img src="~@/assets/images/logo.svg" alt="" /></span>
-          <h1>Stellar</h1>
+          <span class="logo"><img src="~@/assets/images/needle.svg" alt="" /></span>
+          <h1>Pain Point</h1>
           <li v-for="tweet in topFiveTweets">
             {{ tweet.text }}
           </li>
