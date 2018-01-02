@@ -8,7 +8,7 @@
           <h1>Pain Point</h1>
           <p>Discover problems and solve them</p>
           <li v-for="tweet in topFiveTweets">
-            {{ tweet.text }}
+            <span v-html="tweet.html"></span>
           </li>
           <button v-on:click="getTopFiveTweets">Get Top Five Tweets</button>
         </header>
@@ -179,9 +179,13 @@
           this.topFiveTweets = response.data;
         })
         .catch((e) => {
+          console.log(e);
           this.errors.push(e);
         });
       },
+    },
+    updated() {
+      window.twttr.widgets.load();
     },
   };
 </script>
