@@ -49,7 +49,16 @@
               <ul class="tweet-list">
                 <li v-for="tweet in topFiveTweets">
                   <span v-html="tweet.html"></span>
-                  <button v-on:click="onSubmit(tweet)">Save Tweet</button>
+                  <template v-if="isSaved(tweet)">
+                    <span class="save-check">
+                      <span>Saved</span>
+                      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                      </svg>
+                    </span>
+                  </template>
+                  <button v-else v-on:click="onSubmit(tweet)" class="tweet-button">Save Tweet</button>
                 </li>
               </ul>
               <button class="special" v-on:click="getTopFiveTweets">Get Top Five Tweets</button>
@@ -68,7 +77,7 @@
               <ul class="tweet-list">
                 <li v-for="tweet in savedTweets">
                   <span v-html="tweet.html"></span>
-                  <button v-on:click="deleteTweet(tweet._id)">Delete Tweet</button>
+                  <button v-on:click="deleteTweet(tweet._id)" class="tweet-button">Delete Tweet</button>
                   <!-- <button v-on:click="onSubmit(tweet._id)">Delete Tweet</button> -->
                 </li>
               </ul>
@@ -196,6 +205,9 @@
           this.errors.push(e);
         });
       },
+      isSaved(tweet) {
+        return this.savedTweets.find(t => t.url === tweet.url);
+      },
       onSubmit(tweet) {
         const requestBody = { html: tweet.html, url: tweet.url };
         axios.post('http://127.0.0.1:4000/tweets', requestBody)
@@ -217,12 +229,80 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="scss">
   .tweet-list {
     list-style: none;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-left: 0;
+
+    li {
+      margin-top: 2vh;
+      margin-bottom: 2vh;
+      padding-left: 0;
+    }
+  }
+
+  .save-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  $color--green: #7ac142;
+  $curve: cubic-bezier(0.650, 0.000, 0.450, 1.000);
+
+  .checkmark__circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+    stroke: $color--green;
+    fill: none;
+    animation: stroke .6s $curve forwards;
+  }
+
+  .checkmark {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 2;
+    stroke: #fff;
+    stroke-miterlimit: 10;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 1vw;
+    box-shadow: inset 0px 0px 0px $color--green;
+    animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+  }
+
+  .checkmark__check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: stroke .3s $curve .8s forwards;
+  }
+
+  @keyframes stroke {
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes scale {
+    0%, 100% {
+      transform: none;
+    }
+    50% {
+      transform: scale3d(1.1, 1.1, 1);
+    }
+  }
+
+  @keyframes fill {
+    100% {
+      box-shadow: inset 0px 0px 0px 30px $color--green;
+    }
   }
 </style>
