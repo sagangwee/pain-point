@@ -1,7 +1,5 @@
-const axios = require('axios');
+const utils = require('../utils/utils');
 const Twit = require('twit');
-const oembedEndpoint = 'https://publish.twitter.com/oembed';
-const twitterURL = 'https://twitter.com/'
 
 exports.getTwitter = async (req, res, next) => {
   const T = new Twit({
@@ -20,7 +18,7 @@ exports.getTwitter = async (req, res, next) => {
       console.log(err);
     }
     const topFiveTweets = getTopFiveTweets(reply.statuses);
-    const promiseArray = topFiveTweets.map(tweet => getEmbeddedTweet(tweet));
+    const promiseArray = topFiveTweets.map(tweet => utils.getEmbeddedTweet(utils.getTweetURL(tweet)));
     const embeddedTweets = await Promise.all(promiseArray);
     res.json(embeddedTweets);
   });
@@ -30,18 +28,4 @@ const getTopFiveTweets = tweets => {
   const originalTweets = tweets.filter(tweet => !tweet.retweeted);
   let sortedOriginalTweets = originalTweets.sort((a, b) => b.favorite_count - a.favorite_count);
   return sortedOriginalTweets.slice(0, 5);
-}
-
-const getTweetURL = tweet => {
-  return twitterURL + tweet.user.screen_name + '/status/' + tweet.id_str;
-}
-
-const getEmbeddedTweet = async tweet => {
-  oembedURL = oembedEndpoint + '?url=' + encodeURIComponent(getTweetURL(tweet));
-  try {
-    const embeddedTweet = await axios.get(oembedURL);
-    return embeddedTweet.data;
-  } catch (e) {
-    console.log('getEmbeddedTweet error: ', e);
-  }
 }

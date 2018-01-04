@@ -7,9 +7,12 @@
           <span class="logo"><img src="~@/assets/images/needle.svg" alt="" /></span>
           <h1>Pain Point</h1>
           <p>Discover problems and solve them</p>
-          <li v-for="tweet in topFiveTweets">
-            <span v-html="tweet.html"></span>
-          </li>
+          <ul class="tweet-list">
+            <li v-for="tweet in topFiveTweets">
+              <span v-html="tweet.html"></span>
+              <button v-on:click="onSubmit(tweet.html)">Save Tweet</button>
+            </li>
+          </ul>
           <button v-on:click="getTopFiveTweets">Get Top Five Tweets</button>
         </header>
 
@@ -17,7 +20,7 @@
         <nav id="nav">
           <ul>
             <li><a href="#intro" class="active">Introduction</a></li>
-            <li><a href="#first">First Section</a></li>
+            <li><a href="#first">Saved Tweets</a></li>
             <li><a href="#second">Second Section</a></li>
             <li><a href="#cta">Get Started</a></li>
           </ul>
@@ -49,28 +52,17 @@
               <header class="major">
                 <h2>Magna veroeros</h2>
               </header>
-              <ul class="features">
-                <li>
-                  <span class="icon major style1 fa-code"></span>
-                  <h3>Ipsum consequat</h3>
-                  <p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
-                </li>
-                <li>
-                  <span class="icon major style3 fa-copy"></span>
-                  <h3>Amed sed feugiat</h3>
-                  <p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
-                </li>
-                <li>
-                  <span class="icon major style5 fa-diamond"></span>
-                  <h3>Dolor nullam</h3>
-                  <p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
+              <ul class="tweet-list">
+                <li v-for="tweet in savedTweets">
+                  <span v-html="tweet.html"></span>
+                  <!-- <button v-on:click="onSubmit(tweet._id)">Delete Tweet</button> -->
                 </li>
               </ul>
-              <footer class="major">
+              <!-- <footer class="major">
                 <ul class="actions">
                   <li><a href="generic.html" class="button">Learn More</a></li>
                 </ul>
-              </footer>
+              </footer> -->
             </section>
 
           <!-- Second Section -->
@@ -168,15 +160,36 @@
     data() {
       return {
         msg: 'Welcome to Your Vue.js App',
+        savedTweets: [],
         topFiveTweets: [],
       };
+    },
+    created() {
+      axios.get('http://127.0.0.1:4000/tweets')
+      .then((response) => {
+        this.savedTweets = response.data;
+      })
+      .catch((e) => {
+        console.log(e);
+        this.errors.push(e);
+      });
     },
     methods: {
       getTopFiveTweets() {
         axios.get('http://127.0.0.1:8080/api/twitter')
         .then((response) => {
-          // JSON responses are automatically parsed.
           this.topFiveTweets = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+          this.errors.push(e);
+        });
+      },
+      onSubmit(tweetHTML) {
+        const requestBody = { html: tweetHTML };
+        axios.post('http://127.0.0.1:4000/tweets', requestBody)
+        .then((response) => {
+          this.savedTweets.push(response.data);
         })
         .catch((e) => {
           console.log(e);
@@ -185,12 +198,20 @@
       },
     },
     updated() {
-      window.twttr.widgets.load();
+      if (window.twttr.widgets) {
+        window.twttr.widgets.load();
+      }
     },
   };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .tweet-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 0;
+  }
 </style>
