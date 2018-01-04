@@ -7,21 +7,14 @@
           <span class="logo"><img src="~@/assets/images/needle.svg" alt="" /></span>
           <h1>Pain Point</h1>
           <p>Discover problems and solve them</p>
-          <ul class="tweet-list">
-            <li v-for="tweet in topFiveTweets">
-              <span v-html="tweet.html"></span>
-              <button v-on:click="onSubmit(tweet.html)">Save Tweet</button>
-            </li>
-          </ul>
-          <button v-on:click="getTopFiveTweets">Get Top Five Tweets</button>
         </header>
 
       <!-- Nav -->
         <nav id="nav">
           <ul>
             <li><a href="#intro" class="active">Introduction</a></li>
-            <li><a href="#first">Saved Tweets</a></li>
-            <li><a href="#second">Second Section</a></li>
+            <li><a href="#first">Generate Tweets</a></li>
+            <li><a href="#second">Saved Tweets</a></li>
             <li><a href="#cta">Get Started</a></li>
           </ul>
         </nav>
@@ -34,11 +27,12 @@
               <div class="spotlight">
                 <div class="content">
                   <header class="major">
-                    <h2>Ipsum sed adipiscing</h2>
+                    <h2>Use Twitter to solve problems</h2>
                   </header>
-                  <p>Sed lorem ipsum dolor sit amet nullam consequat feugiat consequat magna
-                  adipiscing magna etiam amet veroeros. Lorem ipsum dolor tempus sit cursus.
-                  Tempus nisl et nullam lorem ipsum dolor sit amet aliquam.</p>
+                  <p>
+                    Lots of people complain every day on Twitter. Why not use
+                    these complaints to generate solutions?
+                  </p>
                   <ul class="actions">
                     <li><a href="generic.html" class="button">Learn More</a></li>
                   </ul>
@@ -50,14 +44,15 @@
           <!-- First Section -->
             <section id="first" class="main special">
               <header class="major">
-                <h2>Magna veroeros</h2>
+                <h2>Generate Tweets</h2>
               </header>
               <ul class="tweet-list">
-                <li v-for="tweet in savedTweets">
+                <li v-for="tweet in topFiveTweets">
                   <span v-html="tweet.html"></span>
-                  <!-- <button v-on:click="onSubmit(tweet._id)">Delete Tweet</button> -->
+                  <button v-on:click="onSubmit(tweet)">Save Tweet</button>
                 </li>
               </ul>
+              <button class="special" v-on:click="getTopFiveTweets">Get Top Five Tweets</button>
               <!-- <footer class="major">
                 <ul class="actions">
                   <li><a href="generic.html" class="button">Learn More</a></li>
@@ -68,11 +63,16 @@
           <!-- Second Section -->
             <section id="second" class="main special">
               <header class="major">
-                <h2>Ipsum consequat</h2>
-                <p>Donec imperdiet consequat consequat. Suspendisse feugiat congue<br />
-                posuere. Nulla massa urna, fermentum eget quam aliquet.</p>
+                <h2>Saved Tweets</h2>
               </header>
-              <ul class="statistics">
+              <ul class="tweet-list">
+                <li v-for="tweet in savedTweets">
+                  <span v-html="tweet.html"></span>
+                  <button v-on:click="deleteTweet(tweet._id)">Delete Tweet</button>
+                  <!-- <button v-on:click="onSubmit(tweet._id)">Delete Tweet</button> -->
+                </li>
+              </ul>
+              <!-- <ul class="statistics">
                 <li class="style1">
                   <span class="icon fa-code-fork"></span>
                   <strong>5,120</strong> Etiam
@@ -99,7 +99,7 @@
                 <ul class="actions">
                   <li><a href="generic.html" class="button">Learn More</a></li>
                 </ul>
-              </footer>
+              </footer> -->
             </section>
 
           <!-- Get Started -->
@@ -185,8 +185,19 @@
           this.errors.push(e);
         });
       },
-      onSubmit(tweetHTML) {
-        const requestBody = { html: tweetHTML };
+      deleteTweet(tweetId) {
+        axios.delete(`http://127.0.0.1:4000/tweets/${tweetId}`)
+        .then((response) => {
+          const isDeletedTweet = tweet => tweet._id === response.data._id;
+          this.savedTweets = this.savedTweets.filter(tweet => !isDeletedTweet(tweet));
+        })
+        .catch((e) => {
+          console.log(e);
+          this.errors.push(e);
+        });
+      },
+      onSubmit(tweet) {
+        const requestBody = { html: tweet.html, url: tweet.url };
         axios.post('http://127.0.0.1:4000/tweets', requestBody)
         .then((response) => {
           this.savedTweets.push(response.data);

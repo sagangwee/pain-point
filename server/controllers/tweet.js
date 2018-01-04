@@ -11,9 +11,14 @@ exports.getTweets = (req, res) => {
   });
 };
 
-exports.createTweets = (req, res) => {
-  console.log(req.body);
+exports.createTweet = (req, res) => {
   Tweet.create(req.body, (err, post) => {
+    res.json(post);
+  });
+};
+
+exports.deleteTweet = (req, res) => {
+  Tweet.findByIdAndRemove(req.params.id, req.body, (err, post) => {
     res.json(post);
   });
 };

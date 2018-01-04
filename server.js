@@ -25,7 +25,9 @@ app.get('/twitter', apiController.getTwitter);
 
 app.route('/tweets')
   .get(tweetController.getTweets)
-  .post(tweetController.createTweets);
+  .post(tweetController.createTweet);
+
+app.delete('/tweets/:id', tweetController.deleteTweet);
 
 const server = app.listen(port, function(){
  console.log('Listening on port ' + port);
